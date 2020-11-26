@@ -7,7 +7,7 @@
 
 #include "RD_Remote.h"
 uint8_t count_Sence1;
-
+uint16_t Time2Sleep;
 void RD_Remote_Init(void){
 	gpio_setup_up_down_resistor(LED_R,PM_PIN_PULLUP_1M);
 	gpio_set_func(LED_R,AS_GPIO);
@@ -147,6 +147,31 @@ void Remote_Rp_BT_All(void)
 	}
 }
 */
+void RD_Remote_Sleep()
+{
+	int sleep_mode = DEEPSLEEP_MODE;
+	usb_dp_pullup_en (0);
+	cpu_sleep_wakeup(sleep_mode, PM_WAKEUP_PAD, 0);
+}
+void RD_Remote_Check_And_Sleep(uint16_t time_goto_sleep)
+{
+	if((vrts_BUTTON_OnOff.vruc_Flag) | (vrts_BUTTON_Sence1.vruc_Flag) | (vrts_BUTTON_Sence2.vruc_Flag) \
+			| (vrts_BUTTON_Sence3.vruc_Flag)| (vrts_BUTTON_Sence4.vruc_Flag)| (vrts_BUTTON_Sence5.vruc_Flag))
+	{
+		Time2Sleep =0;
+	}
+	else
+	{
+		Time2Sleep++;
+	}
+
+	if(Time2Sleep>= time_goto_sleep)
+	{
+		uart_CSend("goto Sleep\n");
+		sleep_ms(1);
+		RD_Remote_Sleep();
+	}
+}
 void RD_Remote_Print_Mess()
 {
 	static char UART_TempSend[128];

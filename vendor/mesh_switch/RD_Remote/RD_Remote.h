@@ -23,6 +23,8 @@ int check;
 //void RD_Button_ConfigWakeup();
 void RD_Remote_Init(void);
 //void Remote_Rp_BT_All(void);
+void RD_Remote_Check_And_Sleep(uint16_t time_goto_sleep);
+void RD_Remote_Sleep();
 void RD_Remote_Print_Mess();
 void RD_Remote_Rp_BT(u8 Button_Rp );
 #endif /* RD_REMOTE_H_ */

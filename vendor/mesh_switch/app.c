@@ -414,14 +414,22 @@ void proc_rc_ui_suspend()
 		#if MULTI_ADDR_FOR_SWITCH_EN
 		multi_addr_key_flag = 0;
 		#endif
-        int sleep_mode = DEEPSLEEP_MODE;
+       // int sleep_mode = DEEPSLEEP_MODE;
         #if (PM_DEEPSLEEP_RETENTION_ENABLE)
         sleep_mode = DEEPSLEEP_MODE_RET_SRAM_LOW32K;
         global_reset_new_key_wakeup();
         #endif
-        
-		usb_dp_pullup_en (0);
-		cpu_sleep_wakeup(sleep_mode, PM_WAKEUP_PAD, 0);
+//        if( (rc_mag.adv_send_enable&&clock_time_exceed(rc_mag.adv_send_tick,rc_mag.adv_timeout_def_ms*1000)))
+//        		{
+//        	uart_CSend("a:\n");
+//        		}
+//
+//        if( (!rc_mag.adv_send_enable&&rc_mag.rc_deep_flag))
+//        		{
+//        	uart_CSend("b:\n");
+//        		}
+//		usb_dp_pullup_en (0);
+//		cpu_sleep_wakeup(sleep_mode, PM_WAKEUP_PAD, 0);
 	}
 	#endif
 }

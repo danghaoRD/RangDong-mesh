@@ -33,7 +33,7 @@
 #include "RD_Mess_Data/RD_Mess_Data.h"
 extern void user_init();
 extern void main_loop ();
-
+uint16_t time_sleep=0;
 #if (HCI_ACCESS==HCI_USE_UART)
 #include "proj/drivers/uart.h"
 extern my_fifo_t hci_rx_fifo;
@@ -150,8 +150,8 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 	RD_Button_ConfigWakeup();
 	 RD_Remote_Init();
 	uart_CSend("Wakeup:\n");
-	rc_mag.rc_start_tick = clock_time();
-	rc_mag.rc_deep_flag = 0;
+//	rc_mag.rc_start_tick = clock_time();
+//	rc_mag.rc_deep_flag = 0;
 	while (1) {
 #if (MODULE_WATCHDOG_ENABLE)
 		wd_clear(); //clear watch dog
@@ -160,7 +160,14 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 
 		sleep_ms(1);
 		BUTTON_Scan(Button_All);
+		RD_Remote_Check_And_Sleep(3000);
 		RD_Remote_Rp_BT(Button_All);
+//		time_sleep++;
+//		if(time_sleep>=7000)
+//		{
+//			uart_CSend("Sleep: :) :\n");
+//			RD_Remote_Sleep();
+//		}
 	}
 }
 #endif
