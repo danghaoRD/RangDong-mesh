@@ -17,10 +17,10 @@
 #include "proj_lib/sig_mesh/app_mesh.h"
 
 #include "../RD_Remote/RD_Remote.h"
+#include "../RD_Mess_Data/RD_Mess_Data.h"
 
 
-
-
+ #define WAKEUP_PIN	GPIO_PC4
  #define btnOnOff	GPIO_PC1	//Key0
  #define btnScene1	GPIO_PB4	//key1
  #define btnScene2	GPIO_PB5	//key2
@@ -38,30 +38,48 @@
 
 #define SPEAK_COUNT  (1000)
 
-
-#define BUTTON_COUNTSWITCH      (20)
+#define BUTTON_COUNTSWITCHMAX	(500)
+#define BUTTON_COUNTSWITCH      (12)
 #define BUTTON_COUNTSWITCHLONG  (500)
 #define TIMEOUT_COUNTSWITCH		(30)
 
+typedef enum{
+	Null_Press			= 0x00U,
+	One_Press			= 0x01U,
+	One_Press_Check		= 0x02U,
+	Double_Press		= 0x03U,
+	Double_Press_Check	= 0x04U,
+	Hold_Press			= 0x05U,
+}Type_Press;
+
 typedef struct {
-    unsigned char       vruc_Flag;
+	Type_Press       	vruc_Flag;
     unsigned char       vruc_ValueOld;
     unsigned int        vruc_Count;
     unsigned char       vruc_FlagFirst;
     unsigned char       Time_out;
-}       TS_BUTTON_Data;
+} TS_BUTTON_Data;
   uint8_t       Time_outex;
   uint8_t       test;
-typedef enum{
-	Button_Null,
-	Button_OnOff,
-	Button_Sence1,
-	Button_Sence2,
-	Button_Sence3,
-	Button_Sence4,
-	Button_Sence5,
-	Button_All,
-}Button;
+typedef enum TypeButton{
+	Button_Null  	= 0x00,
+	Button_OnOff 	= 0x01,
+	Button_Sence1	= 0x02,
+	Button_Sence2	= 0x03,
+	Button_Sence3	= 0x04,
+	Button_Sence4	= 0x05,
+	Button_Sence5	= 0x06,
+	Button_All		= 0x07,
+}TypeButton;
+
+//typedef enum{
+//	One_Press			= 0x00U,
+//	One_Press_Check		= 0x01U,
+//	Double_Press		= 0x02U,
+//	Double_Press_Check	= 0x03U,
+//	Hold_Press			= 0x04U,
+//	Null_Press			= 0x05U,
+//}Type_Press;
 
 extern TS_BUTTON_Data   vrts_BUTTON_OnOff;
 extern TS_BUTTON_Data   vrts_BUTTON_Sence1;
@@ -76,8 +94,8 @@ extern TS_BUTTON_Data   vrts_BUTTON_Sence5;
 //void Fn_BUTTON_ScanButton4      (void);
 //void Fn_BUTTON_ScanInTimer      (void);
 void Fn_BUTTON_ClearFlag        (void);
-
-void BUTTON_Scan(Button Button_Check);
+void RD_Button_ConfigWakeup();
+void BUTTON_Scan(TypeButton Button_Check);
 void BUTTON_Scan_Bt_OnOff(void);
 void BUTTON_Scan_Bt_Sence1(void);
 void BUTTON_Scan_Bt_Sence2(void);

@@ -153,7 +153,7 @@ extern "C" {
 #if 1
 #define LED_R	PWM_R
 #define LED_B	PWM_B
-#define WAKEUP_PIN	GPIO_PC4
+//#define WAKEUP_PIN	GPIO_PC4
 //#define btnOnOff	GPIO_PC1	//Key0
 //#define btnScene1	GPIO_PB4	//key1
 //#define btnScene2	GPIO_PB5	//key2
@@ -228,14 +228,18 @@ extern "C" {
 #define	KB_LINE_HIGH_VALID	0
 
 #define	PM_PIN_PULL_DEFAULT	0   // 0:float, reduce sleep current
-
-#define  KB_DRIVE_PINS  {GPIO_PB7, GPIO_PD7, GPIO_PA1}
-#define  KB_SCAN_PINS   {GPIO_PB4, GPIO_PB5, GPIO_PB6, GPIO_PC1, GPIO_PD3}
-
+// RD_EDIT: Button Sleep
+//#define  KB_DRIVE_PINS  {GPIO_PB7, GPIO_PD7, GPIO_PA1}
+//#define  KB_SCAN_PINS   {GPIO_PB4, GPIO_PB5, GPIO_PB6, GPIO_PC1, GPIO_PD3}
+#define KB_DRIVE_PINS		{GPIO_PC4}
+#define  KB_SCAN_PINS   {GPIO_PD3}//{GPIO_PB4, GPIO_PB5, GPIO_PB6, GPIO_PC1, GPIO_PD3}
 
 #define PB7_FUNC		AS_GPIO
 #define PD7_FUNC		AS_GPIO
 #define PA1_FUNC		AS_GPIO
+/*
+ * RD_EDIT: Chinh sua chan nut nhan
+ */
 
 #define PULL_WAKEUP_SRC_PB7           MATRIX_ROW_PULL
 #define PULL_WAKEUP_SRC_PD7           MATRIX_ROW_PULL

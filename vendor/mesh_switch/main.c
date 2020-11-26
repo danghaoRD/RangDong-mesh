@@ -30,6 +30,7 @@
 
 #include "RD_Remote/RD_Remote.h"
 #include "Button/Button.h"
+#include "RD_Mess_Data/RD_Mess_Data.h"
 extern void user_init();
 extern void main_loop ();
 
@@ -146,7 +147,11 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 	#if (MESH_USER_DEFINE_MODE == MESH_IRONMAN_MENLO_ENABLE)
 	LOG_USER_MSG_INFO(0, 0,"[mesh] Start from SIG Mesh", 0);
 	#endif
-	RD_Button_Init();
+	RD_Button_ConfigWakeup();
+	 RD_Remote_Init();
+	uart_CSend("Wakeup:\n");
+	rc_mag.rc_start_tick = clock_time();
+	rc_mag.rc_deep_flag = 0;
 	while (1) {
 #if (MODULE_WATCHDOG_ENABLE)
 		wd_clear(); //clear watch dog
@@ -155,7 +160,7 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 
 		sleep_ms(1);
 		BUTTON_Scan(Button_All);
-		  Remote_Rp_BT();
+		RD_Remote_Rp_BT(Button_All);
 	}
 }
 #endif

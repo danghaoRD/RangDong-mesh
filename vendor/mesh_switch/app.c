@@ -180,7 +180,7 @@ void proc_ui()
 	}
 	tick_scan = clock_time();
 
-	mesh_proc_keyboard();
+//	mesh_proc_keyboard();
 }
 
 rc_para_mag rc_mag;
@@ -400,8 +400,8 @@ void proc_rc_ui_suspend()
 		return ;
 	}
 	
-	// test the rc_tick part 
-	if(clock_time_exceed(rc_mag.rc_start_tick,2000*1000)&&!rc_mag.rc_sending_flag){
+	// test the rc_tick part
+	if(clock_time_exceed(rc_mag.rc_start_tick,7000*1000)&&!rc_mag.rc_sending_flag){
 		rc_mag.rc_deep_flag =1;
 	}
 
@@ -431,26 +431,26 @@ void mesh_switch_init()
 	rc_mag.rc_start_tick = clock_time();
 	mesh_tid.tx[0] = analog_read(REGA_TID);
     ////////// set up wakeup source: driver pin of keyboard  //////////
-    u32 pin[] = KB_DRIVE_PINS;
-    //#if (0 == DEEP_SLEEP_EN)   //suspend
-    for (int i=0; i<sizeof (pin)/sizeof(u32); i++)
-    {
-        //cpu_set_gpio_wakeup (pin[i], 0, 1);
-        gpio_set_wakeup (pin[i], 1, 1);         // level : 1 (high); 0 (low)
-    }
-    gpio_core_wakeup_enable_all (1);
-    //#else   //deep sleep
-    for (int i=0; i<sizeof (pin)/sizeof(u32); i++)
-    {
-        cpu_set_gpio_wakeup (pin[i], 1, 1);     // level : 1 (high); 0 (low)
-    }
-    //#endif
-	// gpio led init part 
-	gpio_setup_up_down_resistor(GPIO_LED,PM_PIN_PULLDOWN_100K);
-	gpio_set_func(GPIO_LED,AS_GPIO);
-	gpio_set_output_en(GPIO_LED,1);
-	gpio_write(GPIO_LED,1);
-	rf_link_light_event_callback(LGT_CMD_SWITCH_POWERON);
+//    u32 pin[] = KB_DRIVE_PINS;
+//    //#if (0 == DEEP_SLEEP_EN)   //suspend
+//    for (int i=0; i<sizeof (pin)/sizeof(u32); i++)
+//    {
+//        //cpu_set_gpio_wakeup (pin[i], 0, 1);
+//        gpio_set_wakeup (pin[i], 1, 1);         // level : 1 (high); 0 (low)
+//    }
+//    gpio_core_wakeup_enable_all (1);
+//    //#else   //deep sleep
+//    for (int i=0; i<sizeof (pin)/sizeof(u32); i++)
+//    {
+//        cpu_set_gpio_wakeup (pin[i], 1, 1);     // level : 1 (high); 0 (low)
+//    }
+//    //#endif
+//	// gpio led init part
+//	gpio_setup_up_down_resistor(GPIO_LED,PM_PIN_PULLDOWN_100K);
+//	gpio_set_func(GPIO_LED,AS_GPIO);
+//	gpio_set_output_en(GPIO_LED,1);
+//	gpio_write(GPIO_LED,1);
+//	rf_link_light_event_callback(LGT_CMD_SWITCH_POWERON);
 }
 
 /////////////////////////////////////////////////////////////////////

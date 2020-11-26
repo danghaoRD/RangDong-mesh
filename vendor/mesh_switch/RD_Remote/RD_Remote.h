@@ -17,9 +17,12 @@
 #include "proj_lib/sig_mesh/app_mesh.h"
 
 #include "../Button/Button.h"
+#include "../RD_Mess_Data/RD_Mess_Data.h"
 
-
-void RD_Button_ConfigWakeup();
-void RD_Button_Init(void);
-void Remote_Rp_BT(void);
+int check;
+//void RD_Button_ConfigWakeup();
+void RD_Remote_Init(void);
+//void Remote_Rp_BT_All(void);
+void RD_Remote_Print_Mess();
+void RD_Remote_Rp_BT(u8 Button_Rp );
 #endif /* RD_REMOTE_H_ */
