@@ -87,7 +87,7 @@ const light_res_hw_t light_res_hw[LIGHT_CNT][3] = {
 };
 	#else
 const light_res_hw_t light_res_hw[LIGHT_CNT][2] = {
-	/*[0] = */{RES_HW_PWM_R, RES_HW_PWM_G},
+	/*[0] = */{RES_HW_PWM_R, RES_HW_PWM_B},
 };
 	#endif
 #else
@@ -590,8 +590,9 @@ _USER_CAN_REDEFINE_ void light_dim_refresh(int idx) // idx: index of LIGHT_CNT.
     light_dim_set_hw(idx, 2, get_pwm_cmp(0xff, (100-mi_ct)*lum_100/100));
             #else
     if(ct_flag){
-        light_dim_set_hw(idx, 0, get_pwm_cmp(0xff,(100-ct_100)*lum_100/100));
-        light_dim_set_hw(idx, 1, get_pwm_cmp(0xff, ct_100*lum_100/100)); 
+    //RD_EDIT: xoa led khi khoi dong
+    	   light_dim_set_hw(idx, 0, get_pwm_cmp(0xff,(100-ct_100)*lum_100/100));
+        light_dim_set_hw(idx, 1, get_pwm_cmp(0xff, ct_100*lum_100/100));
     }
             #endif   
         #endif
@@ -1284,7 +1285,7 @@ int is_led_busy()
 {
     return (!(!led_count && !led_event_pending));
 }
-
+// RD_EDIT: Cau hinh leb bao
 void led_onoff_gpio(u32 gpio, u8 on){
 #if (FEATURE_LOWPOWER_EN || GATT_LPN_EN)
     gpio_set_func (gpio, AS_GPIO);
@@ -1351,7 +1352,23 @@ void proc_led()
 			if( led_off || led_on  ){
 				if (led_sel & BIT(0))
 				{
-					led_onoff_gpio(GPIO_LED, led_on);
+					if(type_Led_Blink == 0)
+					{}
+					else if(type_Led_Blink == 1)
+					{
+						led_onoff_gpio(LED_R, led_on);
+					}
+					else if(type_Led_Blink == 2)
+					{
+						led_onoff_gpio(LED_B, led_on);
+					}
+					else if(type_Led_Blink == 3)
+					{
+						led_onoff_gpio(LED_R, led_on);//led_onoff_gpio(GPIO_LED, led_on); RD_EDIT led sua chan nhay led
+						led_onoff_gpio(LED_B, led_on);
+					}
+//					led_onoff_gpio(LED_R, led_on);//led_onoff_gpio(GPIO_LED, led_on); RD_EDIT led sua chan nhay led
+//					led_onoff_gpio(LED_B, led_on);
 				}
             }
         }

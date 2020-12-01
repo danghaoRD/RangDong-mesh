@@ -19,7 +19,23 @@ void RD_Config_Data_Remote(TypeButton _Button, Type_Press _Mode, u16   _SenceID)
 	RD_Config_Data.Future[0]		 = 0x00;
 	RD_Config_Data.Future[0]		 = 0x00;
 }
+int RD_Mess_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par)
+{
+	RD_Remote_Led(TYPE_LED_BLINK_RED_AND_BLUE, LED_EVENT_FLASH_4HZ_3T);
+	char UART_TempSend[128];
+	sprintf(UART_TempSend,"SENCE_SET-From:0x%x to 0x%x-Opcode:0x%x\n",cb_par->adr_src, cb_par->adr_dst, cb_par->op);
+	uart_CSend(UART_TempSend);
+	sprintf(UART_TempSend,"Messenger length:%d-Content:%d-%d-%d-%d-%d-%d-%d-%d\n",par_len,par[0],par[1],par[2],par[3],par[4],par[5],par[6],par[7]);
+	uart_CSend(UART_TempSend);
+	uart_CSend("..\n");
 
+	return 0;
+}
+
+int RD_Messenger_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par){
+
+	return 0;
+}
 void RD_Messenger_CustomSendSTT(u8 *Mess, u32 _MessLength, u16 adr_dst){
 	mesh_tx_cmd2normal_primary(SENSOR_STATUS, Mess, _MessLength, adr_dst, RD_MAXRESPONESEND);
 }

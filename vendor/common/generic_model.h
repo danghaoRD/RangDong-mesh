@@ -24,7 +24,7 @@
 
 #include "../../proj/tl_common.h"
 #include "../../proj_lib/sig_mesh/app_mesh.h"
-
+#include "../mesh_switch/RD_Mess_Data/RD_Mess_Data.h"
 /** @addtogroup Mesh_Common
   * @{
   */

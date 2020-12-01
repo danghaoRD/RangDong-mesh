@@ -45,11 +45,11 @@
 #endif
 
 #ifndef PWM_FREQ
-#define PWM_FREQ	        (600)   // unit: Hz
+#define PWM_FREQ	        (2000)   // unit: Hz RD_EDIT PWM_FREQ
 #endif
 #define PWM_MAX_TICK        ((CLOCK_SYS_CLOCK_HZ / (PWM_CLK_DIV_LIGHT + 1)) / PWM_FREQ)
 //#define PMW_MAX_TICK		PWM_MAX_TICK
-
+extern uint8_t type_Led_Blink ; // RD_EDIT led extern type_Led_Blink
 #define LED_MASK							0x07
 #define	config_led_event(on,off,n,sel)		(on | (off<<8) | (n<<16) | (sel<<24))
 

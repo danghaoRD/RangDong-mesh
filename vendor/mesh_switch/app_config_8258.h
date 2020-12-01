@@ -167,9 +167,9 @@ extern "C" {
 // RD_EDIT: LED RB Config
 #if 1
 #define PWM_R       GPIO_PA1	//red
-#define PWM_G       GPIO_PB1	//green
-#define PWM_B       GPIO_PA2	//blue
-#define PWM_W       GPIO_PB1		//white
+#define PWM_G       GPIO_PD2	//green     //RD_EDIT ADC_Pin Chinh PB1 -->
+#define PWM_B       GPIO_PD3	//blue
+#define PWM_W       GPIO_PD2		//white //RD_EDIT ADC_Pin Chinh PB1 -->
 
 #define PWM_FUNC_R  AS_PWM  // AS_PWM_SECOND
 #define PWM_FUNC_G  AS_PWM  // AS_PWM_SECOND
@@ -187,7 +187,7 @@ extern "C" {
 #define PWM_INV_W   (GET_PWM_INVERT_VAL(PWM_W, PWM_FUNC_W))
 #endif
 
-#define GPIO_LED	GPIO_PD4
+#define GPIO_LED	PWM_R //GPIO_PD4   RD_EDIT Chinh led Proc
 
 
 /////////////open SWS digital pullup to prevent MCU err, this is must ////////////

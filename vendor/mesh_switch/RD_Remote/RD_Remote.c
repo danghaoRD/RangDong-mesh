@@ -11,14 +11,16 @@ uint16_t Time2Sleep;
 void RD_Remote_Init(void){
 	gpio_setup_up_down_resistor(LED_R,PM_PIN_PULLUP_1M);
 	gpio_set_func(LED_R,AS_GPIO);
+	gpio_set_input_en(LED_R, 0);
 	gpio_set_output_en(LED_R,1);
-	gpio_write(LED_R,1);
+	gpio_write(LED_R,0);
 	rf_link_light_event_callback(LGT_CMD_SWITCH_POWERON);
 	//LED 2
 	gpio_setup_up_down_resistor(LED_B,PM_PIN_PULLUP_1M);
 	gpio_set_func(LED_B,AS_GPIO);
+	gpio_set_input_en(LED_B,0);
 	gpio_set_output_en(LED_B,1);
-	gpio_write(LED_B,1);
+	gpio_write(LED_B,0);
 	//button config
 	gpio_set_func(btnOnOff  ,AS_GPIO);	gpio_set_output_en(btnOnOff,  0);	gpio_set_input_en(btnOnOff  ,1); gpio_setup_up_down_resistor(btnOnOff, PM_PIN_PULLUP_1M);
 	gpio_set_func(btnScene1 ,AS_GPIO);	gpio_set_output_en(btnScene1, 0);	gpio_set_input_en(btnScene1 ,1); gpio_setup_up_down_resistor(btnScene1, PM_PIN_PULLUP_1M);
@@ -30,123 +32,18 @@ void RD_Remote_Init(void){
 	//rc_mag.kb_pressed = 1;
 	//button_ProvFlag = 0;
 }
-/*
-void Remote_Rp_BT_All(void)
+void RD_Remote_Led_Check_Unprov()
 {
- 	if(vrts_BUTTON_OnOff.vruc_Flag == One_Press)
-	{
-		uart_CSend("Button_OK:On\n");
-		vrts_BUTTON_OnOff.vruc_Flag = Null_Press;
-	}
-	if(vrts_BUTTON_OnOff.vruc_Flag == Double_Press)
-	{
-		uart_CSend("Button_OK:double\n");
-		vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
-	}*/
-/*
-	static char UART_TempSend[128];
-	// nut an ok
-	switch (vrts_BUTTON_OnOff.vruc_Flag) {
-		case One_Press:
-			uart_CSend("Button_OK:On\n");
-			// truyen ban tin
-			RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0115);
-			RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-			RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-			sprintf(UART_TempSend,"RD_Config_Data: %2x %2x %2x %2x %2x %2x %2x %2x \n",  RD_Config_Data.Header[0], RD_Config_Data.Header[1], 	\
-					RD_Config_Data.BID, RD_Config_Data.ModeID, RD_Config_Data.SenceID[0], RD_Config_Data.SenceID[1],\
-					RD_Config_Data.Future[0], RD_Config_Data.Future[0] );
-			uart_CSend(UART_TempSend);
-
-			vrts_BUTTON_OnOff.vruc_Flag = Null_Press;
-			break;
-		case Double_Press:
-			uart_CSend("Button_OK:double\n");
-			RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0115);
-			RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-			RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-			//uart_CSend(&RD_Config_Data);
-			sprintf(UART_TempSend,"RD_Config_Data: %2x %2x %2x %2x %2x %2x %2x %2x \n",  RD_Config_Data.Header[0], RD_Config_Data.Header[1], 	\
-					RD_Config_Data.BID, RD_Config_Data.ModeID, RD_Config_Data.SenceID[0], RD_Config_Data.SenceID[1],\
-					RD_Config_Data.Future[0], RD_Config_Data.Future[0] );
-			uart_CSend(UART_TempSend);
-			vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
-			break;
-		case Hold_Press:
-			uart_CSend("Button_OK:Hould\n");
-			RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0115);
-			RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-			RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-		//	uart_CSend(&RD_Config_Data);
-			sprintf(UART_TempSend,"RD_Config_Data: %2x %2x %2x %2x %2x %2x %2x %2x \n",  RD_Config_Data.Header[0], RD_Config_Data.Header[1], 	\
-					RD_Config_Data.BID, RD_Config_Data.ModeID, RD_Config_Data.SenceID[0], RD_Config_Data.SenceID[1],\
-					RD_Config_Data.Future[0], RD_Config_Data.Future[0] );
-			uart_CSend(UART_TempSend);
-
-//			while( !STT_BT_5)
-//			{}
-
-			vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
-			break;
-		default:
-			break;
-	}
-
-
-	if(vrts_BUTTON_Sence1.vruc_Flag == 1)
-	{
-//		count_Sence1= count_Sence1+2;
-//		char UART_TempSend[128];
-// 		sprintf(UART_TempSend,"BT.Sence: %d \n", count_Sence1 );
-//		uart_CSend(UART_TempSend);
-		uart_CSend("Button_Sence1:On\n");
-
-		RD_Config_Data_Remote(Button_Sence1, vrts_BUTTON_Sence1.vruc_Flag, 0x02);
-		RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-		RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-		sprintf(UART_TempSend,"RD_Config_Data_BT 1: %2x %2x %2x %2x %2x %2x %2x %2x \n",  RD_Config_Data.Header[0], RD_Config_Data.Header[1], 	\
-				RD_Config_Data.BID, RD_Config_Data.ModeID, RD_Config_Data.SenceID[0], RD_Config_Data.SenceID[1],\
-				RD_Config_Data.Future[0], RD_Config_Data.Future[0] );
-		uart_CSend(UART_TempSend);
-
-		vrts_BUTTON_Sence1.vruc_Flag =0;
-	}
-
-	if(vrts_BUTTON_Sence2.vruc_Flag == 1)
-	{
-//		char UART_TempSend[128];
-//		sprintf(UART_TempSend,"BT.Sence: %d \n", count_Sence1 );
-//		uart_CSend(UART_TempSend);
-		uart_CSend("Button_Sence2:On\n");
-		vrts_BUTTON_Sence2.vruc_Flag =0;
-	}
-
-	if(vrts_BUTTON_Sence3.vruc_Flag == 1)
-	{
-		uart_CSend("Button_Sence3:On\n");
-		vrts_BUTTON_Sence3.vruc_Flag =0;
-	}
-
-	if(vrts_BUTTON_Sence4.vruc_Flag == 1)
-	{
-		uart_CSend("Button_Sence4:On\n");
-		vrts_BUTTON_Sence4.vruc_Flag =0;
-	}
-
-	if(vrts_BUTTON_Sence5.vruc_Flag == 1)
-	{
-		uart_CSend("Button_Sence5:On\n");
-		if(!rc_mag.adv_send_enable){
-			uart_CSend("Button_Sence5:Provison \n");
-							rf_link_light_event_callback(LGT_CMD_SWITCH_PROVISION);
-							rc_mag.adv_send_enable =1;
-							rc_mag.adv_send_tick = clock_time();
-							rc_mag.adv_timeout_def_ms = 60;//60s
+	// RD_EDIT Set Provision
+		if(get_provision_state() == STATE_DEV_UNPROV)
+		{
+			if(!rc_mag.adv_send_enable)
+			{
+				RD_Remote_Led(TYPE_LED_BLINK_RED, LED_EVENT_FLASH_4HZ_2T);
+			}
 		}
-		vrts_BUTTON_Sence5.vruc_Flag =0;
-	}
+
 }
-*/
 void RD_Remote_Sleep()
 {
 	int sleep_mode = DEEPSLEEP_MODE;
@@ -155,6 +52,17 @@ void RD_Remote_Sleep()
 }
 void RD_Remote_Check_And_Sleep(uint16_t time_goto_sleep)
 {
+	if(get_provision_state() == STATE_DEV_UNPROV)
+	{
+		time_goto_sleep = 3000;
+		//RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_3T);
+	}
+	else if(get_provision_state() == STATE_DEV_PROVING)
+	{
+
+		Time2Sleep =0;
+		RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_3T);
+	}
 	if((vrts_BUTTON_OnOff.vruc_Flag) | (vrts_BUTTON_Sence1.vruc_Flag) | (vrts_BUTTON_Sence2.vruc_Flag) \
 			| (vrts_BUTTON_Sence3.vruc_Flag)| (vrts_BUTTON_Sence4.vruc_Flag)| (vrts_BUTTON_Sence5.vruc_Flag))
 	{
@@ -167,6 +75,7 @@ void RD_Remote_Check_And_Sleep(uint16_t time_goto_sleep)
 
 	if(Time2Sleep>= time_goto_sleep)
 	{
+
 		uart_CSend("goto Sleep\n");
 		sleep_ms(1);
 		RD_Remote_Sleep();
@@ -288,17 +197,29 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_2:double\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 					//uart_CSend(&RD_Config_Data);
 					RD_Remote_Print_Mess();
-
+					if(!STT_BT_3)
+					{
+						gpio_write(LED_B, 0);
+						gpio_write(LED_R, 1);
+						sleep_ms(100);
+						gpio_write(LED_B, 1);
+						gpio_write(LED_R, 0);
+						sleep_ms(100);
+						uart_CSend("Reset Factory\n");
+						sleep_ms(5);
+						factory_reset();
+						start_reboot();
+					}
 					vrts_BUTTON_Sence2.vruc_Flag =Null_Press;
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_2:Hould\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 				//	uart_CSend(&RD_Config_Data);
@@ -307,7 +228,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 		//			while( !STT_BT_5)
 		//			{}
 
-					vrts_BUTTON_Sence1.vruc_Flag =Null_Press;
+					vrts_BUTTON_Sence2.vruc_Flag =Null_Press;
 					break;
 				default:
 					break;
@@ -333,7 +254,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_3:double\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 					//uart_CSend(&RD_Config_Data);
@@ -343,7 +264,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_3:Hould\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 				//	uart_CSend(&RD_Config_Data);
@@ -378,7 +299,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_4:double\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 					//uart_CSend(&RD_Config_Data);
@@ -388,7 +309,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_4:Hould\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 				//	uart_CSend(&RD_Config_Data);
@@ -423,7 +344,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_5:double\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 					//uart_CSend(&RD_Config_Data);
@@ -433,14 +354,13 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_5:Hould\n");
-					RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
+					RD_Config_Data_Remote(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
 					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
 					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 				//	uart_CSend(&RD_Config_Data);
 					RD_Remote_Print_Mess();
-
-		//			while( !STT_BT_5)
-		//			{}
+//					// RD_EDIT check Provision
+					  RD_Remote_Led_Check_Unprov();
 
 					vrts_BUTTON_Sence5.vruc_Flag =Null_Press;
 					break;
@@ -451,3 +371,17 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 
 
 }
+void RD_Remote_Led(u8 type_led, u32 led_even)
+{
+	// tye
+	type_Led_Blink = type_led;
+	cfg_led_event(led_even);
+}
+void RD_Remote_ADC_Init()
+{
+	adc_init();
+	adc_vbat_init(ADC_BATT_PIN);
+	//adc_base_init(ADC_BATT_PIN);
+	adc_power_on_sar_adc(1);
+}
+

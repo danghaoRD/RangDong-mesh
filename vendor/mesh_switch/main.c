@@ -33,6 +33,7 @@
 #include "RD_Mess_Data/RD_Mess_Data.h"
 extern void user_init();
 extern void main_loop ();
+uint16_t timecheck_ADC=0;
 uint16_t time_sleep=0;
 #if (HCI_ACCESS==HCI_USE_UART)
 #include "proj/drivers/uart.h"
@@ -149,9 +150,13 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 	#endif
 	RD_Button_ConfigWakeup();
 	 RD_Remote_Init();
+	 RD_Remote_ADC_Init();
 	uart_CSend("Wakeup:\n");
-//	rc_mag.rc_start_tick = clock_time();
-//	rc_mag.rc_deep_flag = 0;
+	gpio_write(LED_R,1);
+	gpio_write(LED_B,1);
+//	rf_link_light_event_callback(LGT_CMD_SWITCH_PROVISION);
+//	sleep_ms(2000);
+	//cfg_led_event(LED_EVENT_FLASH_4HZ_3T);
 	while (1) {
 #if (MODULE_WATCHDOG_ENABLE)
 		wd_clear(); //clear watch dog
@@ -159,15 +164,28 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 		main_loop ();
 
 		sleep_ms(1);
+ 	// light_dim_set_hw(100, 0, get_pwm_cmp(0xff,(100-50)*50/100));
+   //  light_dim_set_hw(idx, 1, get_pwm_cmp(0xff, ct_100*lum_100/100));
+//		gpio_toggle(LED_B);
+//		gpio_toggle(LED_R);
+		//light_ev_with_sleep(8, 500*1000);
 		BUTTON_Scan(Button_All);
-		RD_Remote_Check_And_Sleep(3000);
+		RD_Remote_Check_And_Sleep(1000);
 		RD_Remote_Rp_BT(Button_All);
-//		time_sleep++;
-//		if(time_sleep>=7000)
-//		{
-//			uart_CSend("Sleep: :) :\n");
-//			RD_Remote_Sleep();
-//		}
+		timecheck_ADC ++;
+		if(timecheck_ADC>=1000)
+		{
+
+			//cfg_led_event(LED_EVENT_FLASH_4HZ_3T);
+			RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_3T);
+			RD_Remote_Check_And_Sleep(TIME_TO_SLEEP);
+			timecheck_ADC=0;
+			uint16_t adc_bat = adc_sample_and_get_result();
+			//mesh_cmd_sig_g_battery_get()
+			static char UART_TempSend[128];
+			sprintf(UART_TempSend,"ADC_Data: %d   \n",adc_bat  );
+			uart_CSend(UART_TempSend);
+		}
 	}
 }
 #endif
