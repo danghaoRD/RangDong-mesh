@@ -1342,6 +1342,9 @@ void proc_led()
 				if (led_no - 1 == led_count)
 				{
 					led_count = led_no = 0;
+					// RD_EDIT: ket thuc chu trinh nhay led
+					led_onoff_gpio(LED_R, 1);
+					led_onoff_gpio(LED_B, 1);
 					return ;
 				}
 			}

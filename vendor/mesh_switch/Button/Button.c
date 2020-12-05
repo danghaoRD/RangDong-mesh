@@ -15,9 +15,14 @@ TS_BUTTON_Data   vrts_BUTTON_Sence5;
 //uint8_t       Time_outex;
 uint8_t flagHoldButton = 0;
 void RD_Button_ConfigWakeup(){
-	gpio_set_wakeup (WAKEUP_PIN, 0, 1);
+
+//	gpio_setup_up_down_resistor(WAKEUP_PIN, PM_PIN_PULLUP_1M);
+//	gpio_set_wakeup (WAKEUP_PIN, 0, 1);
+//	gpio_core_wakeup_enable_all (1);
+//	cpu_set_gpio_wakeup (WAKEUP_PIN, 0, 1);
+	gpio_set_wakeup (GPIO_PC4, 0, 1);
 	gpio_core_wakeup_enable_all (1);
-	cpu_set_gpio_wakeup (WAKEUP_PIN, 0, 1);
+	cpu_set_gpio_wakeup (GPIO_PC4, 0, 1);
 }
 
 void BUTTON_Scan(TypeButton Button_Check)

@@ -8,7 +8,7 @@
 #include "RD_Remote.h"
 uint8_t count_Sence1;
 uint16_t Time2Sleep;
-
+#define TIME_TSS 2
 void RD_Remote_Init(void){
 	gpio_setup_up_down_resistor(LED_R,PM_PIN_PULLUP_1M);
 	gpio_set_func(LED_R,AS_GPIO);
@@ -23,13 +23,21 @@ void RD_Remote_Init(void){
 	gpio_set_output_en(LED_B,1);
 	gpio_write(LED_B,0);
 	//button config
-	gpio_set_func(btnOnOff  ,AS_GPIO);	gpio_set_output_en(btnOnOff,  0);	gpio_set_input_en(btnOnOff  ,1); gpio_setup_up_down_resistor(btnOnOff, PM_PIN_PULLUP_1M);
-	gpio_set_func(btnScene1 ,AS_GPIO);	gpio_set_output_en(btnScene1, 0);	gpio_set_input_en(btnScene1 ,1); gpio_setup_up_down_resistor(btnScene1, PM_PIN_PULLUP_1M);
-	gpio_set_func(btnScene2 ,AS_GPIO);	gpio_set_output_en(btnScene2, 0);	gpio_set_input_en(btnScene2 ,1); gpio_setup_up_down_resistor(btnScene2, PM_PIN_PULLUP_1M);
-	gpio_set_func(btnScene3 ,AS_GPIO);	gpio_set_output_en(btnScene3, 0);	gpio_set_input_en(btnScene3 ,1); gpio_setup_up_down_resistor(btnScene3, PM_PIN_PULLUP_1M);
-	gpio_set_func(btnScene4 ,AS_GPIO);	gpio_set_output_en(btnScene4, 0);	gpio_set_input_en(btnScene4 ,1); gpio_setup_up_down_resistor(btnScene4, PM_PIN_PULLUP_1M);
-	gpio_set_func(btnScene5 ,AS_GPIO);	gpio_set_output_en(btnScene5, 0);	gpio_set_input_en(btnScene5 ,1); gpio_setup_up_down_resistor(btnScene5, PM_PIN_PULLUP_1M);
+//	gpio_set_func(btnOnOff  ,AS_GPIO);	gpio_set_output_en(btnOnOff,  0);	gpio_set_input_en(btnOnOff  ,1); gpio_setup_up_down_resistor(btnOnOff, PM_PIN_PULLUP_1M);
+//	gpio_set_func(btnScene1 ,AS_GPIO);	gpio_set_output_en(btnScene1, 0);	gpio_set_input_en(btnScene1 ,1); gpio_setup_up_down_resistor(btnScene1, PM_PIN_PULLUP_1M);
+//	gpio_set_func(btnScene2 ,AS_GPIO);	gpio_set_output_en(btnScene2, 0);	gpio_set_input_en(btnScene2 ,1); gpio_setup_up_down_resistor(btnScene2, PM_PIN_PULLUP_1M);
+//	gpio_set_func(btnScene3 ,AS_GPIO);	gpio_set_output_en(btnScene3, 0);	gpio_set_input_en(btnScene3 ,1); gpio_setup_up_down_resistor(btnScene3, PM_PIN_PULLUP_1M);
+//	gpio_set_func(btnScene4 ,AS_GPIO);	gpio_set_output_en(btnScene4, 0);	gpio_set_input_en(btnScene4 ,1); gpio_setup_up_down_resistor(btnScene4, PM_PIN_PULLUP_1M);
+//	gpio_set_func(btnScene5 ,AS_GPIO);	gpio_set_output_en(btnScene5, 0);	gpio_set_input_en(btnScene5 ,1); gpio_setup_up_down_resistor(btnScene5, PM_PIN_PULLUP_1M);
 
+	u32 pin2[] = KB_BUTTON_PIN;
+	for (int i=0; i<sizeof (pin2)/sizeof(u32); i++)
+	{
+		gpio_setup_up_down_resistor(pin2[i], PM_PIN_PULLUP_1M);
+		gpio_set_func(pin2[i], AS_GPIO);
+		gpio_set_output_en(pin2[i], 0);
+		gpio_set_input_en(pin2[i], 1);
+	}
 	//rc_mag.kb_pressed = 1;
 	//button_ProvFlag = 0;
 }
@@ -117,7 +125,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 				else    					// neu chua co canh luu thi gui ButtonID
 				{
 					// ham gui canh
-					access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+					access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 					uart_CSend("Send SENCE_ID By ButttonOn/Off One Press: \n");
 				}
 				vrts_BUTTON_OnOff.vruc_Flag = Null_Press;
@@ -133,7 +141,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 				}
 				else    					// neu chua co canh luu thi gui ButtonID
 				{
-					access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+					access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 					uart_CSend("Send SENCE_ID By ButttonOn/Off Double_Press  : \n");
 					// ham gui canh
 				}
@@ -169,7 +177,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce1 One_Press  : \n");
 					}
 
@@ -187,7 +195,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce1 Double_Press  : \n");
 					}
 
@@ -220,7 +228,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce2 One_Press  : \n");
 					}
 					vrts_BUTTON_Sence2.vruc_Flag = Null_Press;
@@ -237,7 +245,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce2 Double_Press  : \n");
 					}
 					if(!STT_BT_3)
@@ -279,7 +287,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce3 One_Press  : \n");
 					}
 					vrts_BUTTON_Sence3.vruc_Flag = Null_Press;
@@ -296,7 +304,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce3 Double_Press  : \n");
 					}
 
@@ -329,7 +337,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce4 One_Press  : \n");
 					}
 
@@ -346,7 +354,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					else    					// neu chua co canh luu thi gui ButtonID
 					{
 						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
 						uart_CSend("Send SENCE_ID By ButttonSecce4 Double_Press  : \n");
 					}
 

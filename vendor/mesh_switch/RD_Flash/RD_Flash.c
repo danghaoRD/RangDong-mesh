@@ -262,7 +262,7 @@ void RD_Flash_Init()
 
 
 	flash_read_page(FLASH_ADDR, FLASH_BUFF_LEN, Buff_Flash_Read);
-	if(Buff_Flash_Read[0] == 0xFF)
+	if(Buff_Flash_Read[63] == 0xFF)
 	{
 		RD_Flash_CleanSenceFlash();
 	}
@@ -271,11 +271,11 @@ void RD_Flash_Init()
 		char UART_TempSend[128];
 		sprintf(UART_TempSend,"Flash data 0x210000:0x%x 0x%x \n",Buff_Flash_Read[0],Buff_Flash_Read[1] );
 		uart_CSend(UART_TempSend);
-		for(int i=0; i<36;i=i+2)
-		{
-			sprintf(UART_TempSend," 0x%x 0x%x \n",Buff_Flash_Read[i+1],Buff_Flash_Read[i] );
-			uart_CSend(UART_TempSend);
-		}
+//		for(int i=0; i<36;i=i+2)
+//		{
+//			sprintf(UART_TempSend," 0x%x 0x%x \n",Buff_Flash_Read[i+1],Buff_Flash_Read[i] );
+//			uart_CSend(UART_TempSend);
+//		}
 	}
 }
 
