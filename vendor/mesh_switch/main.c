@@ -31,10 +31,16 @@
 #include "RD_Remote/RD_Remote.h"
 #include "Button/Button.h"
 #include "RD_Mess_Data/RD_Mess_Data.h"
+#include "RD_Flash/RD_Flash.h"
 extern void user_init();
 extern void main_loop ();
 uint16_t timecheck_ADC=0;
 uint16_t time_sleep=0;
+
+void Test_Main();
+
+void Test_Loop();
+
 #if (HCI_ACCESS==HCI_USE_UART)
 #include "proj/drivers/uart.h"
 extern my_fifo_t hci_rx_fifo;
@@ -152,40 +158,74 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 	 RD_Remote_Init();
 	 RD_Remote_ADC_Init();
 	uart_CSend("Wakeup:\n");
-	gpio_write(LED_R,1);
-	gpio_write(LED_B,1);
-//	rf_link_light_event_callback(LGT_CMD_SWITCH_PROVISION);
-//	sleep_ms(2000);
-	//cfg_led_event(LED_EVENT_FLASH_4HZ_3T);
+	Test_Main();
 	while (1) {
 #if (MODULE_WATCHDOG_ENABLE)
 		wd_clear(); //clear watch dog
 #endif
 		main_loop ();
+//		flash_read_page(FLASH_ADDR, 4096,Buff_Flash);
+
 
 		sleep_ms(1);
- 	// light_dim_set_hw(100, 0, get_pwm_cmp(0xff,(100-50)*50/100));
-   //  light_dim_set_hw(idx, 1, get_pwm_cmp(0xff, ct_100*lum_100/100));
-//		gpio_toggle(LED_B);
-//		gpio_toggle(LED_R);
-		//light_ev_with_sleep(8, 500*1000);
+
 		BUTTON_Scan(Button_All);
 		RD_Remote_Check_And_Sleep(1000);
 		RD_Remote_Rp_BT(Button_All);
-		timecheck_ADC ++;
-		if(timecheck_ADC>=1000)
-		{
 
-			//cfg_led_event(LED_EVENT_FLASH_4HZ_3T);
-			RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_3T);
-			RD_Remote_Check_And_Sleep(TIME_TO_SLEEP);
-			timecheck_ADC=0;
-			uint16_t adc_bat = adc_sample_and_get_result();
-			//mesh_cmd_sig_g_battery_get()
-			static char UART_TempSend[128];
-			sprintf(UART_TempSend,"ADC_Data: %d   \n",adc_bat  );
-			uart_CSend(UART_TempSend);
+		Test_Loop();
+	}
+}
+
+void Test_Main()
+{
+	gpio_write(LED_R,1);
+	gpio_write(LED_B,1);
+/*   for(int i=0; i<FLASH_BUFF_LEN; i++)
+   {
+	   Buff_Flash_Write[i]=0xff;
+   }
+   Buff_Flash_Write[2] = 0x32;
+   Buff_Flash_Write[3] = 0x32;
+   Buff_Flash_Write[4] = 0x43;
+   	flash_erase_sector(FLASH_ADDR);
+	flash_write_page(FLASH_ADDR, FLASH_BUFF_LEN,Buff_Flash_Write );
+	flash_read_page(FLASH_ADDR, FLASH_BUFF_LEN,Buff_Flash_Read);
+	uart_CSend("0x");
+	int u=0;
+	for(int i =0; i < FLASH_BUFF_LEN;i++){
+		if(Buff_Flash_Read[i] != 255){
+			uart_CSend("dellok");
+			 u++;
 		}
+	}
+	if(u ==0) uart_CSend("okvaicalon");*/
+	//uart_CSend((char *) Buff_Flash);
+//	uint8_t data[2]={0x12, 0x55};
+//	Save_Change_SenceID_2_Flash(Button_OnOff, One_Press,data );
+//	Buff_Flash_Read[0] = 0x14;
+//	Buff_Flash_Read[1] = 0x33;
+//  	RD_Flash_Get_Sence_ID(Button_OnOff, One_Press);
+
+	  RD_Flash_Init();
+//  access_cmd_scene_recall(0xffff, u32 rsp_max, 0x0002, 0, transition_par_t *trs_par)
+//	Get_Sence_ID(Button_OnOff, 0x01);
+}
+void Test_Loop()
+{
+	timecheck_ADC ++;
+	if(timecheck_ADC>=1000)
+	{
+
+		//cfg_led_event(LED_EVENT_FLASH_4HZ_3T);
+		RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_3T);
+		RD_Remote_Check_And_Sleep(TIME_TO_SLEEP);
+		timecheck_ADC=0;
+		uint16_t adc_bat = adc_sample_and_get_result();
+		//mesh_cmd_sig_g_battery_get()
+		static char UART_TempSend[128];
+		sprintf(UART_TempSend,"ADC_Data: %d   \n",adc_bat  );
+		uart_CSend(UART_TempSend);
 	}
 }
 #endif

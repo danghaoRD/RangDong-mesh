@@ -18,6 +18,7 @@
 
 #include "../Button/Button.h"
 #include "../RD_Mess_Data/RD_Mess_Data.h"
+#include "../RD_Flash/RD_Flash.h"
 #define TIME_TO_SLEEP 1000
 #define ADC_BATT_PIN   GPIO_PB1
 #define TYPE_LED_BLINK_NULL 0
@@ -37,4 +38,5 @@ void RD_Remote_Sleep();
 void RD_Remote_Print_Mess();
 void RD_Remote_Rp_BT(u8 Button_Rp );
 void RD_Remote_Led(u8 type_led, u32 led_even);
+void RD_Remote_SendButtonID2GW(u8 Button, u8 modePress, u16 Sence);
 #endif /* RD_REMOTE_H_ */

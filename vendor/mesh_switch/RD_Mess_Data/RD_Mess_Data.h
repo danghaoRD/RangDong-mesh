@@ -20,6 +20,7 @@
 
 #include "../Button/Button.h"
 #include "../RD_Remote/RD_Remote.h"
+#include "../RD_Flash/RD_Flash.h"
 #define RD_OPCODE_SEND		(0xA082)
 #define RD_OPCODE_RSP		(0xA182)
 #define RD_MAXRESPONESEND (2)
@@ -33,7 +34,6 @@ typedef struct{
 	unsigned char SenceID[2];
 	unsigned char Future[2];
 }RD_Config_DataRemote;
-
 extern RD_Config_DataRemote RD_Config_Data;
 extern unsigned char 		*RD_Messenger_TempSend;
 

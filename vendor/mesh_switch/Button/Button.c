@@ -13,6 +13,7 @@ TS_BUTTON_Data   vrts_BUTTON_Sence3;
 TS_BUTTON_Data   vrts_BUTTON_Sence4;
 TS_BUTTON_Data   vrts_BUTTON_Sence5;
 //uint8_t       Time_outex;
+uint8_t flagHoldButton = 0;
 void RD_Button_ConfigWakeup(){
 	gpio_set_wakeup (WAKEUP_PIN, 0, 1);
 	gpio_core_wakeup_enable_all (1);
@@ -80,6 +81,7 @@ void BUTTON_Scan_Bt_OnOff(void)
         if(vrts_BUTTON_OnOff.vruc_Count == BUTTON_COUNTSWITCHMAX)
         {
         	vrts_BUTTON_OnOff.vruc_Flag = Hold_Press;                   // an giu
+        	flagHoldButton =1;
         	vrts_BUTTON_OnOff.Time_out =0;
         }
     }
@@ -136,6 +138,7 @@ void BUTTON_Scan_Bt_Sence1(void){
        if(vrts_BUTTON_Sence1.vruc_Count == BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence1.vruc_Flag = Hold_Press;                   // an giu
+    	   flagHoldButton =1;
     	   vrts_BUTTON_Sence1.Time_out =0;
        }
    }
@@ -188,6 +191,7 @@ void BUTTON_Scan_Bt_Sence2(void){
        if(vrts_BUTTON_Sence2.vruc_Count == BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence2.vruc_Flag = Hold_Press;                   // an giu
+    	   flagHoldButton =1;
     	   vrts_BUTTON_Sence2.Time_out =0;
        }
    }
@@ -241,6 +245,7 @@ void BUTTON_Scan_Bt_Sence3(void)
        if(vrts_BUTTON_Sence3.vruc_Count == BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence3.vruc_Flag = Hold_Press;                   // an giu
+    	   flagHoldButton =1;
     	   vrts_BUTTON_Sence3.Time_out =0;
        }
    }
@@ -293,6 +298,7 @@ void BUTTON_Scan_Bt_Sence4(void){
        if(vrts_BUTTON_Sence4.vruc_Count == BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence4.vruc_Flag = Hold_Press;                   // an giu
+    	   flagHoldButton =1;
     	   vrts_BUTTON_Sence4.Time_out =0;
        }
    }
@@ -345,6 +351,7 @@ void BUTTON_Scan_Bt_Sence5(void){
        if(vrts_BUTTON_Sence5.vruc_Count == BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence5.vruc_Flag = Hold_Press;                   // an giu
+    	   flagHoldButton =1;
     	   vrts_BUTTON_Sence5.Time_out =0;
        }
    }

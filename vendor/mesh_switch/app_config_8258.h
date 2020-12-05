@@ -56,11 +56,11 @@ extern "C" {
 //////////// product  Information  //////////////////////////////
 #define ID_VENDOR				0x248a			// for report
 #define ID_PRODUCT_BASE			0x880C
-#define STRING_VENDOR			L"Telink"
-#define STRING_PRODUCT			L"BLE Mesh"
-#define STRING_SERIAL			L"TLSR825X"
+#define STRING_VENDOR			L"AAAAA"
+#define STRING_PRODUCT			L"BBBBB"
+#define STRING_SERIAL			L"CCCCC"
 
-#define DEV_NAME                "SigMesh"
+#define DEV_NAME                "EEEEE"
 
 #define APPLICATION_DONGLE		0					// or else APPLICATION_DEVICE
 #define	USB_PRINTER				1

@@ -8,6 +8,7 @@
 #include "RD_Remote.h"
 uint8_t count_Sence1;
 uint16_t Time2Sleep;
+
 void RD_Remote_Init(void){
 	gpio_setup_up_down_resistor(LED_R,PM_PIN_PULLUP_1M);
 	gpio_set_func(LED_R,AS_GPIO);
@@ -81,6 +82,13 @@ void RD_Remote_Check_And_Sleep(uint16_t time_goto_sleep)
 		RD_Remote_Sleep();
 	}
 }
+void RD_Remote_SendButtonID2GW(u8 Button, u8 modePress, u16 Sence)
+{
+	RD_Config_Data_Remote(Button, modePress, Sence);
+	RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
+	RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
+	RD_Remote_Print_Mess();
+}
 void RD_Remote_Print_Mess()
 {
 	static char UART_TempSend[128];
@@ -91,6 +99,7 @@ void RD_Remote_Print_Mess()
 }
 void RD_Remote_Rp_BT(TypeButton Button_Rp )
 {
+	uint16_t checkSenceID;
 	if( (Button_Rp == Button_OnOff) || (Button_Rp == Button_All) )
 	{
 		// nut an ok
@@ -98,37 +107,46 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 		{
 			case One_Press:
 				uart_CSend("Button_OK:On\n");
-				// truyen ban tin
-				RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0115);
-				RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-				RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-
-				RD_Remote_Print_Mess();
-
+				// kiem tra nut da luu canh chua
+				  checkSenceID = RD_Flash_Get_Sence_ID(Button_OnOff, One_Press);
+				  checkSenceID = 0x0002;
+				if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+				{
+					RD_Remote_SendButtonID2GW(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0000);
+				}
+				else    					// neu chua co canh luu thi gui ButtonID
+				{
+					// ham gui canh
+					access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+					uart_CSend("Send SENCE_ID By ButttonOn/Off One Press: \n");
+				}
 				vrts_BUTTON_OnOff.vruc_Flag = Null_Press;
 				break;
 			case Double_Press:
 				uart_CSend("Button_OK:double\n");
-				RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0115);
-				RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-				RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-				//uart_CSend(&RD_Config_Data);
-				RD_Remote_Print_Mess();
-
+				// kiem tra nut da luu canh chua
+				  checkSenceID = RD_Flash_Get_Sence_ID(Button_OnOff, Double_Press);
+				  checkSenceID = 0x0003;
+				if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+				{
+					RD_Remote_SendButtonID2GW(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0000);
+				}
+				else    					// neu chua co canh luu thi gui ButtonID
+				{
+					access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+					uart_CSend("Send SENCE_ID By ButttonOn/Off Double_Press  : \n");
+					// ham gui canh
+				}
 				vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
 				break;
 			case Hold_Press:
-				uart_CSend("Button_OK:Hould\n");
-				RD_Config_Data_Remote(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0115);
-				RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-				RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-			//	uart_CSend(&RD_Config_Data);
-				RD_Remote_Print_Mess();
+				//uart_CSend("Button_OK:Hould\n");
+
 
 	//			while( !STT_BT_5)
 	//			{}
 
-				vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
+			//	vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
 				break;
 			default:
 				break;
@@ -141,36 +159,42 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			switch (vrts_BUTTON_Sence1.vruc_Flag)
 			{
 				case One_Press:
-					uart_CSend("Button_Sence_1:On\n");
-					// truyen ban tin
-					RD_Config_Data_Remote(Button_Sence1, vrts_BUTTON_Sence1.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence1, One_Press);
 
-					RD_Remote_Print_Mess();
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence1, vrts_BUTTON_Sence1.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce1 One_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence1.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_1:double\n");
-					RD_Config_Data_Remote(Button_Sence1, vrts_BUTTON_Sence1.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-					//uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence1, Double_Press);
+
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence1, vrts_BUTTON_Sence1.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce1 Double_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence1.vruc_Flag =Null_Press;
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_1:Hould\n");
-					RD_Config_Data_Remote(Button_Sence1, vrts_BUTTON_Sence1.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-				//	uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
-
-		//			while( !STT_BT_5)
-		//			{}
 
 					vrts_BUTTON_Sence1.vruc_Flag =Null_Press;
 					break;
@@ -186,47 +210,49 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			{
 				case One_Press:
 					uart_CSend("Button_Sence_2:On\n");
-					// truyen ban tin
-					RD_Config_Data_Remote(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence2, One_Press);
 
-					RD_Remote_Print_Mess();
-
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce2 One_Press  : \n");
+					}
 					vrts_BUTTON_Sence2.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_2:double\n");
-					RD_Config_Data_Remote(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-					//uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence2, Double_Press);
+
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce2 Double_Press  : \n");
+					}
 					if(!STT_BT_3)
 					{
-						gpio_write(LED_B, 0);
-						gpio_write(LED_R, 1);
-						sleep_ms(100);
-						gpio_write(LED_B, 1);
-						gpio_write(LED_R, 0);
-						sleep_ms(100);
-						uart_CSend("Reset Factory\n");
-						sleep_ms(5);
+						RD_Remote_Led(TYPE_LED_BLINK_RED, LED_EVENT_FLASH_4HZ_3T);
+						RD_Flash_CleanSenceFlash();
+						sleep_ms(1000);
 						factory_reset();
 						start_reboot();
 					}
 					vrts_BUTTON_Sence2.vruc_Flag =Null_Press;
 					break;
 				case Hold_Press:
-					uart_CSend("Button_Sence_2:Hould\n");
-					RD_Config_Data_Remote(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-				//	uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					uart_CSend("Button_Sence_2:Hold\n");
 
-		//			while( !STT_BT_5)
-		//			{}
 
 					vrts_BUTTON_Sence2.vruc_Flag =Null_Press;
 					break;
@@ -243,37 +269,43 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			{
 				case One_Press:
 					uart_CSend("Button_Sence_3:On\n");
-					// truyen ban tin
-					RD_Config_Data_Remote(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence3, One_Press);
 
-					RD_Remote_Print_Mess();
-
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce3 One_Press  : \n");
+					}
 					vrts_BUTTON_Sence3.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_3:double\n");
-					RD_Config_Data_Remote(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-					//uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence3, Double_Press);
+
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce3 Double_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence3.vruc_Flag =Null_Press;
 					break;
 				case Hold_Press:
-					uart_CSend("Button_Sence_3:Hould\n");
-					RD_Config_Data_Remote(Button_Sence3, vrts_BUTTON_Sence3.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-				//	uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					uart_CSend("Button_Sence_3:Hold\n");
 
-		//			while( !STT_BT_5)
-		//			{}
-
-					vrts_BUTTON_Sence3.vruc_Flag =Null_Press;
+ 					vrts_BUTTON_Sence3.vruc_Flag =Null_Press;
 					break;
 				default:
 					break;
@@ -288,35 +320,40 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			{
 				case One_Press:
 					uart_CSend("Button_Sence_4:On\n");
-					// truyen ban tin
-					RD_Config_Data_Remote(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					uint16_t checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence4, One_Press);
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce4 One_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence4.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_4:double\n");
-					RD_Config_Data_Remote(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-					//uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence4, Double_Press);
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 3);
+						uart_CSend("Send SENCE_ID By ButttonSecce4 Double_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence4.vruc_Flag =Null_Press;
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_4:Hould\n");
-					RD_Config_Data_Remote(Button_Sence4, vrts_BUTTON_Sence4.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-				//	uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
-
-		//			while( !STT_BT_5)
-		//			{}
 
 					vrts_BUTTON_Sence4.vruc_Flag =Null_Press;
 					break;
@@ -333,35 +370,42 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			{
 				case One_Press:
 					uart_CSend("Button_Sence_5:On\n");
-					// truyen ban tin
-					RD_Config_Data_Remote(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					uint16_t checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence5, One_Press);
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 2);
+						uart_CSend("Send SENCE_ID By ButttonSecce5 One_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence5.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
 					uart_CSend("Button_Sence_5:double\n");
-					RD_Config_Data_Remote(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-					//uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
+					// kiem tra nut da luu canh chua
+					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence5, Double_Press);
+					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+					{
+						RD_Remote_SendButtonID2GW(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0000);
+					}
+					else    					// neu chua co canh luu thi gui ButtonID
+					{
+						// ham gui canh
+						//RD_EDIT: Sence Recall from Flash
+						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, 2);
+						uart_CSend("Send SENCE_ID By ButttonSecce5 Double_Press  : \n");
+					}
 
 					vrts_BUTTON_Sence5.vruc_Flag =Null_Press;
 					break;
 				case Hold_Press:
 					uart_CSend("Button_Sence_5:Hould\n");
-					RD_Config_Data_Remote(Button_Sence5, vrts_BUTTON_Sence5.vruc_Flag, 0x0115);
-					RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
-					RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
-				//	uart_CSend(&RD_Config_Data);
-					RD_Remote_Print_Mess();
-//					// RD_EDIT check Provision
-					  RD_Remote_Led_Check_Unprov();
-
+					RD_Remote_Led_Check_Unprov();
 					vrts_BUTTON_Sence5.vruc_Flag =Null_Press;
 					break;
 				default:

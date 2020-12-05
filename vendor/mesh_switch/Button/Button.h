@@ -18,7 +18,7 @@
 
 #include "../RD_Remote/RD_Remote.h"
 #include "../RD_Mess_Data/RD_Mess_Data.h"
-
+#include "../RD_Flash/RD_Flash.h"
 
  #define WAKEUP_PIN	GPIO_PC4
  #define btnOnOff	GPIO_PC1	//Key0
@@ -42,7 +42,7 @@
 #define BUTTON_COUNTSWITCH      (12)
 #define BUTTON_COUNTSWITCHLONG  (500)
 #define TIMEOUT_COUNTSWITCH		(30)
-
+extern uint8_t flagHoldButton;
 typedef enum{
 	Null_Press			= 0x00U,
 	One_Press			= 0x01U,
@@ -61,15 +61,15 @@ typedef struct {
 } TS_BUTTON_Data;
   uint8_t       Time_outex;
   uint8_t       test;
-typedef enum TypeButton{
-	Button_Null  	= 0x00,
-	Button_OnOff 	= 0x01,
-	Button_Sence1	= 0x02,
-	Button_Sence2	= 0x03,
-	Button_Sence3	= 0x04,
-	Button_Sence4	= 0x05,
-	Button_Sence5	= 0x06,
-	Button_All		= 0x07,
+typedef enum  {
+	Button_Null  	= 0x00U,
+	Button_OnOff 	= 0x01U,
+	Button_Sence1	= 0x02U,
+	Button_Sence2	= 0x03U,
+	Button_Sence3	= 0x04U,
+	Button_Sence4	= 0x05U,
+	Button_Sence5	= 0x06U,
+	Button_All		= 0x07U,
 }TypeButton;
 
 //typedef enum{

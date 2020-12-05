@@ -536,16 +536,16 @@ extern "C" {
 #define MD_POWER_ONOFF_EN           MD_DEF_TRANSIT_TIME_EN 	// because both of them save in same flash sector.
     #endif
 #define MD_TIME_EN                  0
-#define MD_SCENE_EN                 0
+#define MD_SCENE_EN                 1   // RD_EDIT SENCE_EN
 #define MD_SCHEDULE_EN              MD_TIME_EN  // because both of them save in same flash sector.
 #define MD_PROPERTY_EN				0
 #define	MD_LOCATION_EN				0	// location,sensor,battery use same flash addr, but one sector max store 6 models
-#define MD_BATTERY_EN				1 // RD_EDIT BATTERRY_EN
+#define MD_BATTERY_EN				0 // RD_EDIT BATTERRY_EN
 #define MD_DF_EN					0
 #define MD_SBR_EN					0
 
 #define MD_SERVER_EN                1   // SIG and vendor MD
-#define MD_CLIENT_EN                0   // just SIG MD RD_EDIT CLIENT
+#define MD_CLIENT_EN                1   // just SIG MD RD_EDIT CLIENT enable
     #if(DUAL_VENDOR_EN)
 #define MD_CLIENT_VENDOR_EN         0
     #elif ((LIGHT_TYPE_SEL == LIGHT_TYPE_PANEL) || SPIRIT_VENDOR_EN)

@@ -21,14 +21,25 @@ void RD_Config_Data_Remote(TypeButton _Button, Type_Press _Mode, u16   _SenceID)
 }
 int RD_Mess_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par)
 {
+	uart_CSend("Co Ban Tin\n");
+	if(flagHoldButton == 1)
+	{
+		flagHoldButton = 0;
 	RD_Remote_Led(TYPE_LED_BLINK_RED_AND_BLUE, LED_EVENT_FLASH_4HZ_3T);
 	char UART_TempSend[128];
 	sprintf(UART_TempSend,"SENCE_SET-From:0x%x to 0x%x-Opcode:0x%x\n",cb_par->adr_src, cb_par->adr_dst, cb_par->op);
 	uart_CSend(UART_TempSend);
-	sprintf(UART_TempSend,"Messenger length:%d-Content:%d-%d-%d-%d-%d-%d-%d-%d\n",par_len,par[0],par[1],par[2],par[3],par[4],par[5],par[6],par[7]);
+	sprintf(UART_TempSend,"Messenger length:%d-Content:%x-%x-%x-%x-%x-%x-%x-%x\n",par_len,par[0],par[1],par[2],par[3],par[4],par[5],par[6],par[7]);
 	uart_CSend(UART_TempSend);
 	uart_CSend("..\n");
 
+	// RD_EDIT:Flash Save Sence_SetUp to Flash
+		button_sence_data.BID = par[0];
+		button_sence_data.MODE_ID = par[1];
+		button_sence_data.SENCE_ID[0]= par[3];
+		button_sence_data.SENCE_ID[1]= par[2];
+		RD_Flash_SaveChangeSenceID2Flash(button_sence_data.BID, button_sence_data.MODE_ID, button_sence_data.SENCE_ID );
+	}
 	return 0;
 }
 

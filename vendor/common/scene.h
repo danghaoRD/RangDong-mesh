@@ -110,7 +110,7 @@ int mesh_cmd_sig_scene_status(u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 
 //-------------
 int access_cmd_scene_store(u16 adr_dst, u32 rsp_max, u16 id, int ack);
-int access_cmd_scene_recall(u16 adr_dst, u32 rsp_max, u16 id, int ack, transition_par_t *trs_par);
+int access_cmd_scene_recall(u16 adr_dst, u32 rsp_max, u16 id, int ack, transition_par_t *trs_par); // RD_EDIT: sence recall
 int access_cmd_scene_get(u16 adr, u32 rsp_max);
 int access_cmd_scene_reg_get(u16 adr, u32 rsp_max);
 int access_cmd_scene_del(u16 adr_dst, u32 rsp_max, u16 id, int ack);

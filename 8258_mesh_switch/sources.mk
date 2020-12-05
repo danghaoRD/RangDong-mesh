@@ -20,6 +20,7 @@ vendor/user_app \
 vendor/mesh_switch \
 vendor/mesh_switch/RD_Remote \
 vendor/mesh_switch/RD_Mess_Data \
+vendor/mesh_switch/RD_Flash \
 vendor/mesh_switch/Button \
 vendor/common \
 vendor/common/nl_api \
