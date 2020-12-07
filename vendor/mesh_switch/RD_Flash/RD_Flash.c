@@ -131,8 +131,8 @@ uint16_t RD_Flash_Get_Sence_ID(uint8_t buttonID, uint8_t modeID )
 	}
 
 	uint16_t buff_H, buff_L;
-	buff_H = button_sence_data.SENCE_ID[1];
-	buff_L = button_sence_data.SENCE_ID[0];
+	buff_H = button_sence_data.SENCE_ID[0];
+	buff_L = button_sence_data.SENCE_ID[1];
 		char UART_TempSend[128];
 		sprintf(UART_TempSend," SenceID_From_Flash:0x%x and 0x%x \n",button_sence_data.SENCE_ID[0],button_sence_data.SENCE_ID[1] );
 		uart_CSend(UART_TempSend);

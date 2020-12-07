@@ -64,6 +64,7 @@ void BUTTON_Scan_Bt_OnOff(void)
 {
      if(!STT_BT_0)														// phat hien an nut
     {
+    	 Time2Sleep =0;
         if(vrts_BUTTON_OnOff.vruc_Count <= BUTTON_COUNTSWITCHMAX)
         {
         	vrts_BUTTON_OnOff.vruc_Count++;
@@ -121,6 +122,7 @@ void BUTTON_Scan_Bt_OnOff(void)
 void BUTTON_Scan_Bt_Sence1(void){
     if(!STT_BT_1)														// phat hien an nut
    {
+    	Time2Sleep =0;
        if(vrts_BUTTON_Sence1.vruc_Count <= BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence1.vruc_Count++;
@@ -174,6 +176,7 @@ void BUTTON_Scan_Bt_Sence1(void){
 void BUTTON_Scan_Bt_Sence2(void){
     if(!STT_BT_2)														// phat hien an nut
    {
+    	Time2Sleep =0;
        if(vrts_BUTTON_Sence2.vruc_Count <= BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence2.vruc_Count++;
@@ -228,6 +231,7 @@ void BUTTON_Scan_Bt_Sence3(void)
 {
     if(!STT_BT_3)														// phat hien an nut
    {
+    	Time2Sleep =0;
        if(vrts_BUTTON_Sence3.vruc_Count <= BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence3.vruc_Count++;
@@ -281,6 +285,7 @@ void BUTTON_Scan_Bt_Sence3(void)
 void BUTTON_Scan_Bt_Sence4(void){
     if(!STT_BT_4)														// phat hien an nut
    {
+    	Time2Sleep =0;
        if(vrts_BUTTON_Sence4.vruc_Count <= BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence4.vruc_Count++;
@@ -334,6 +339,7 @@ void BUTTON_Scan_Bt_Sence4(void){
 void BUTTON_Scan_Bt_Sence5(void){
     if(!STT_BT_5)														// phat hien an nut
    {
+    	Time2Sleep =0;
        if(vrts_BUTTON_Sence5.vruc_Count <= BUTTON_COUNTSWITCHMAX)
        {
     	   vrts_BUTTON_Sence5.vruc_Count++;

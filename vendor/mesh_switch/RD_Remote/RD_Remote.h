@@ -25,6 +25,7 @@
 #define TYPE_LED_BLINK_RED  1
 #define TYPE_LED_BLINK_BLUE 2
 #define TYPE_LED_BLINK_RED_AND_BLUE 3
+extern uint16_t Time2Sleep;
 uint8_t type_Led_Blink ;
 int check;
 //void RD_Button_ConfigWakeup();

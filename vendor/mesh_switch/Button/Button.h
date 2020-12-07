@@ -39,15 +39,15 @@
 #define SPEAK_COUNT  (1000)
 
 #define BUTTON_COUNTSWITCHMAX	(500)
-#define BUTTON_COUNTSWITCH      (12)
+#define BUTTON_COUNTSWITCH      (2)
 #define BUTTON_COUNTSWITCHLONG  (500)
 #define TIMEOUT_COUNTSWITCH		(30)
 extern uint8_t flagHoldButton;
 typedef enum{
 	Null_Press			= 0x00U,
 	One_Press			= 0x01U,
-	One_Press_Check		= 0x02U,
-	Double_Press		= 0x03U,
+	One_Press_Check		= 0x03U,
+	Double_Press		= 0x02U,
 	Double_Press_Check	= 0x04U,
 	Hold_Press			= 0x05U,
 }Type_Press;

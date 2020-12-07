@@ -42,7 +42,10 @@ int RD_Mess_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_p
 	}
 	return 0;
 }
-
+int mesh_cmd_sig_RD_respone_status (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par)
+{
+	return 0;
+}
 int RD_Messenger_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par){
 
 	return 0;

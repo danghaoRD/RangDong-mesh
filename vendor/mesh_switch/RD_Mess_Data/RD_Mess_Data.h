@@ -37,10 +37,11 @@ typedef struct{
 extern RD_Config_DataRemote RD_Config_Data;
 extern unsigned char 		*RD_Messenger_TempSend;
 
-#define mesh_cmd_sig_RD_respone_status      (0)
+//#define mesh_cmd_sig_RD_respone_status      (0)
 
 
 extern void RD_Config_Data_Remote(u8 _Button, u8 _Mode, u16 _SenceID);
+int mesh_cmd_sig_RD_respone_status (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 int RD_Messenger_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 int RD_Mess_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 void RD_Messenger_CustomSendSTT(u8 *Mess, u32 _MessLength, u16 adr_dst);

@@ -14,14 +14,14 @@ void RD_Remote_Init(void){
 	gpio_set_func(LED_R,AS_GPIO);
 	gpio_set_input_en(LED_R, 0);
 	gpio_set_output_en(LED_R,1);
-	gpio_write(LED_R,0);
+	gpio_write(LED_R,1);
 	rf_link_light_event_callback(LGT_CMD_SWITCH_POWERON);
 	//LED 2
 	gpio_setup_up_down_resistor(LED_B,PM_PIN_PULLUP_1M);
 	gpio_set_func(LED_B,AS_GPIO);
 	gpio_set_input_en(LED_B,0);
 	gpio_set_output_en(LED_B,1);
-	gpio_write(LED_B,0);
+	gpio_write(LED_B,1);
 	//button config
 //	gpio_set_func(btnOnOff  ,AS_GPIO);	gpio_set_output_en(btnOnOff,  0);	gpio_set_input_en(btnOnOff  ,1); gpio_setup_up_down_resistor(btnOnOff, PM_PIN_PULLUP_1M);
 //	gpio_set_func(btnScene1 ,AS_GPIO);	gpio_set_output_en(btnScene1, 0);	gpio_set_input_en(btnScene1 ,1); gpio_setup_up_down_resistor(btnScene1, PM_PIN_PULLUP_1M);
@@ -115,9 +115,10 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 		{
 			case One_Press:
 				uart_CSend("Button_OK:On\n");
+				RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_1T);
 				// kiem tra nut da luu canh chua
 				  checkSenceID = RD_Flash_Get_Sence_ID(Button_OnOff, One_Press);
-				  checkSenceID = 0x0002;
+				//  checkSenceID = 0x0002;
 				if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
 				{
 					RD_Remote_SendButtonID2GW(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0000);
@@ -132,9 +133,10 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 				break;
 			case Double_Press:
 				uart_CSend("Button_OK:double\n");
+				RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 				// kiem tra nut da luu canh chua
 				  checkSenceID = RD_Flash_Get_Sence_ID(Button_OnOff, Double_Press);
-				  checkSenceID = 0x0003;
+		//		  checkSenceID = 0x0003;
 				if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
 				{
 					RD_Remote_SendButtonID2GW(Button_OnOff, vrts_BUTTON_OnOff.vruc_Flag, 0x0000);
@@ -150,11 +152,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			case Hold_Press:
 				//uart_CSend("Button_OK:Hould\n");
 
-
-	//			while( !STT_BT_5)
-	//			{}
-
-			//	vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
+				vrts_BUTTON_OnOff.vruc_Flag =Null_Press;
 				break;
 			default:
 				break;
@@ -168,6 +166,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			{
 				case One_Press:
 					// kiem tra nut da luu canh chua
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_1T);
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence1, One_Press);
 
 					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
@@ -184,6 +183,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					vrts_BUTTON_Sence1.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 					uart_CSend("Button_Sence_1:double\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence1, Double_Press);
@@ -217,6 +217,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			switch (vrts_BUTTON_Sence2.vruc_Flag)
 			{
 				case One_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_1T);
 					uart_CSend("Button_Sence_2:On\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence2, One_Press);
@@ -234,6 +235,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					vrts_BUTTON_Sence2.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 					uart_CSend("Button_Sence_2:double\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence2, Double_Press);
@@ -276,6 +278,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			switch (vrts_BUTTON_Sence3.vruc_Flag)
 			{
 				case One_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_1T);
 					uart_CSend("Button_Sence_3:On\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence3, One_Press);
@@ -293,6 +296,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					vrts_BUTTON_Sence3.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 					uart_CSend("Button_Sence_3:double\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence3, Double_Press);
@@ -327,6 +331,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			switch (vrts_BUTTON_Sence4.vruc_Flag)
 			{
 				case One_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_1T);
 					uart_CSend("Button_Sence_4:On\n");
 					// kiem tra nut da luu canh chua
 					uint16_t checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence4, One_Press);
@@ -344,6 +349,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					vrts_BUTTON_Sence4.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 					uart_CSend("Button_Sence_4:double\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence4, Double_Press);
@@ -377,6 +383,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 			switch (vrts_BUTTON_Sence5.vruc_Flag)
 			{
 				case One_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_1T);
 					uart_CSend("Button_Sence_5:On\n");
 					// kiem tra nut da luu canh chua
 					uint16_t checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence5, One_Press);
@@ -394,6 +401,7 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					vrts_BUTTON_Sence5.vruc_Flag = Null_Press;
 					break;
 				case Double_Press:
+					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 					uart_CSend("Button_Sence_5:double\n");
 					// kiem tra nut da luu canh chua
 					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence5, Double_Press);

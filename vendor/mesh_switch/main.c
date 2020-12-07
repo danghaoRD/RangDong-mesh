@@ -170,7 +170,7 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 		sleep_ms(1);
 
 		BUTTON_Scan(Button_All);
-		RD_Remote_Check_And_Sleep(1000);
+		RD_Remote_Check_And_Sleep(120);
 		RD_Remote_Rp_BT(Button_All);
 
 		Test_Loop();
