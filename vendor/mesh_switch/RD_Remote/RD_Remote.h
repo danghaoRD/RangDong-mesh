@@ -40,4 +40,5 @@ void RD_Remote_Print_Mess();
 void RD_Remote_Rp_BT(u8 Button_Rp );
 void RD_Remote_Led(u8 type_led, u32 led_even);
 void RD_Remote_SendButtonID2GW(u8 Button, u8 modePress, u16 Sence);
+void RD_Remote_ResponeSetSence(u8 Button, u8 modePress, u16 Sence);
 #endif /* RD_REMOTE_H_ */

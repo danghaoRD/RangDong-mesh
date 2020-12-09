@@ -210,6 +210,7 @@ void Test_Main()
 	  RD_Flash_Init();
 //  access_cmd_scene_recall(0xffff, u32 rsp_max, 0x0002, 0, transition_par_t *trs_par)
 //	Get_Sence_ID(Button_OnOff, 0x01);
+	  //RD_Remote_ResponeSetSence(0x01, 0x01, 0x05555);
 }
 void Test_Loop()
 {

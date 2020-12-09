@@ -45,7 +45,7 @@
 #include "stack/ble/gap/gap.h"
 #include "vendor/common/blt_soft_timer.h"
 #include "proj/drivers/rf_pa.h"
-
+#include "RD_Mess_Data/RD_Mess_Data.h"
 #if (HCI_ACCESS==HCI_USE_UART)
 #include "proj/drivers/uart.h"
 #endif
@@ -179,7 +179,7 @@ void proc_ui()
 		return;
 	}
 	tick_scan = clock_time();
-
+	RD_Send_MessTypeDivice();//RD_EDIT TypeDevice SendMess
 //	mesh_proc_keyboard();
 }
 

@@ -18,6 +18,7 @@ SIZEDUMMY :=
 SUBDIRS := \
 vendor/user_app \
 vendor/mesh_switch \
+vendor/mesh_switch/RD_Type_Device \
 vendor/mesh_switch/RD_Remote \
 vendor/mesh_switch/RD_Mess_Data \
 vendor/mesh_switch/RD_Flash \

@@ -97,6 +97,14 @@ void RD_Remote_SendButtonID2GW(u8 Button, u8 modePress, u16 Sence)
 	RD_Messenger_SendNode2Gateway(RD_Messenger_TempSend,8);
 	RD_Remote_Print_Mess();
 }
+
+void RD_Remote_ResponeSetSence(u8 Button, u8 modePress, u16 Sence)
+{
+	RD_Config_Data_Remote(Button, modePress, Sence);
+	RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);
+	RD_Messenger_SendNode2GatewayRsp(RD_Messenger_TempSend,8);
+	uart_CSend("Responed");
+}
 void RD_Remote_Print_Mess()
 {
 	static char UART_TempSend[128];
@@ -238,21 +246,25 @@ void RD_Remote_Rp_BT(TypeButton Button_Rp )
 					RD_Remote_Led(TYPE_LED_BLINK_BLUE, LED_EVENT_FLASH_4HZ_2T);
 					uart_CSend("Button_Sence_2:double\n");
 					// kiem tra nut da luu canh chua
-					  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence2, Double_Press);
+					if(STT_BT_3)
+					{
+						  checkSenceID = RD_Flash_Get_Sence_ID(Button_Sence2, Double_Press);
 
-					if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
-					{
-						RD_Remote_SendButtonID2GW(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0000);
+						if(checkSenceID == 0x0000) // neu co canh luu thi gui Sence
+						{
+							RD_Remote_SendButtonID2GW(Button_Sence2, vrts_BUTTON_Sence2.vruc_Flag, 0x0000);
+						}
+						else    					// neu chua co canh luu thi gui ButtonID
+						{
+							// ham gui canh
+							access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
+							uart_CSend("Send SENCE_ID By ButttonSecce2 Double_Press  : \n");
+						}
 					}
-					else    					// neu chua co canh luu thi gui ButtonID
+					else
 					{
-						// ham gui canh
-						access_cmd_scene_recall(0xffff, 0, checkSenceID, CMD_NO_ACK, TIME_TSS);
-						uart_CSend("Send SENCE_ID By ButttonSecce2 Double_Press  : \n");
-					}
-					if(!STT_BT_3)
-					{
-						RD_Remote_Led(TYPE_LED_BLINK_RED, LED_EVENT_FLASH_4HZ_3T);
+						RD_Remote_Led(TYPE_LED_BLINK_RED, LED_EVENT_FLASH_STOP);
+						RD_Remote_Led(TYPE_LED_BLINK_RED, LED_EVENT_FLASH_4HZ_10S);
 						RD_Flash_CleanSenceFlash();
 						sleep_ms(1000);
 						factory_reset();

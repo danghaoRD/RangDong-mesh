@@ -8,7 +8,7 @@
 
 RD_Config_DataRemote 			RD_Config_Data;
 unsigned char 					*RD_Messenger_TempSend;
-
+unsigned char vr_RD_ProvDone;
 void RD_Config_Data_Remote(TypeButton _Button, Type_Press _Mode, u16   _SenceID){
 	RD_Config_Data.Header[0] 	 	 =  (uint8_t) (REMOTE_DC_MODULE_TYPE & 0xff);
 	RD_Config_Data.Header[1] 	 	 =  (uint8_t) ((REMOTE_DC_MODULE_TYPE>>8) & 0xff);
@@ -40,12 +40,19 @@ int RD_Mess_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_p
 		button_sence_data.SENCE_ID[1]= par[2];
 		RD_Flash_SaveChangeSenceID2Flash(button_sence_data.BID, button_sence_data.MODE_ID, button_sence_data.SENCE_ID );
 	}
+	RD_Remote_ResponeSetSence(button_sence_data.BID, button_sence_data.MODE_ID, *button_sence_data.SENCE_ID);
 	return 0;
 }
-int mesh_cmd_sig_RD_respone_status (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par)
-{
-	return 0;
-}
+//int mesh_cmd_sig_RD_respone_status (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par)
+//{
+//	uart_CSend("Goto Rsp\n");
+//	RD_Remote_SendButtonID2GW1(0x01, 0x01, 0x1111);
+////    int err = 0;
+////    if(cb_par->model){  // model may be Null for status message
+////    }
+////    return err;
+//	return 0;
+//}
 int RD_Messenger_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par){
 
 	return 0;
@@ -57,6 +64,48 @@ void RD_Messenger_CustomSendSTT(u8 *Mess, u32 _MessLength, u16 adr_dst){
 void RD_Messenger_SendNode2Gateway (u8 *Mess, u32 _MessLength){
 	RD_Messenger_CustomSendSTT(Mess, _MessLength, RD_GATEWAYADDRESS);
 }
+
+void RD_Messenger_CustomSendSTTRsp(u8 *Mess, u32 _MessLength, u16 adr_dst){
+	mesh_tx_cmd2normal_primary(RD_OPCODE_RSP, Mess, _MessLength, adr_dst, RD_MAXRESPONESEND);
+}
+
+void RD_Messenger_SendNode2GatewayRsp (u8 *Mess, u32 _MessLength){
+	RD_Messenger_CustomSendSTTRsp(Mess, _MessLength, RD_GATEWAYADDRESS);
+}
+
+int RD_Messenger_BindAll(u8 *par, int par_len, mesh_cb_fun_par_t *cb_par){
+	extern int mesh_cmd_sig_cfg_bind(u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
+
+	extern unsigned char vr_RD_ProvDone;
+	if((par[4] == 0x06) && (par[5] == 0x13)){
+		vr_RD_ProvDone = 1;
+	}
+	return(mesh_cmd_sig_cfg_bind(par, par_len,  cb_par));
+}
+
+
+void RD_Messenger_CustomSendSTTBindAll(u8 *Mess, u32 _MessLength, u16 adr_dst){
+	mesh_tx_cmd2normal_primary(RD_OPCODE_RSP, Mess, _MessLength, adr_dst, RD_MAXRESPONESEND);
+}
+
+void RD_Messenger_SendNode2GatewayBindAll (u8 *Mess, u32 _MessLength){
+	RD_Messenger_CustomSendSTTBindAll(Mess, _MessLength, RD_GATEWAYADDRESS);
+}
+
+void RD_Send_MessTypeDivice(void){
+	if(vr_RD_ProvDone == 1){
+		vr_RD_ProvDone = 0;
+		RD_TypeDevice_Conver2Message();
+		RD_Messenger_SendNode2GatewayRsp(vrp_TypeDevice_Point2Message,8);
+		uart_CSend("bind xong\n");
+	}
+}
+
+
+
+
+
+
 
 void RD_Send_Mess(void){
 	RD_Messenger_TempSend = (unsigned char *)(&RD_Config_Data);

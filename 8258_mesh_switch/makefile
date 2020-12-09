@@ -11,6 +11,7 @@ RM := rm -rf
 -include subdir.mk
 -include vendor/user_app/subdir.mk
 -include vendor/mesh_switch/subdir.mk
+-include vendor/mesh_switch/RD_Type_Device/subdir.mk
 -include vendor/mesh_switch/RD_Remote/subdir.mk
 -include vendor/mesh_switch/RD_Mess_Data/subdir.mk
 -include vendor/mesh_switch/RD_Flash/subdir.mk

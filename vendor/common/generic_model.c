@@ -904,7 +904,8 @@ const mesh_cmd_sig_func_t mesh_cmd_sig_func[] = {
     {HEARTBEAT_SUB_GET,0,SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER,mesh_cmd_sig_heartbeat_sub_get,HEARTBEAT_SUB_STATUS},
     {HEARTBEAT_SUB_SET,0,SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER,mesh_cmd_sig_heartbeat_sub_set,HEARTBEAT_SUB_STATUS},
     {HEARTBEAT_SUB_STATUS,1,SIG_MD_CFG_SERVER, SIG_MD_CFG_CLIENT,mesh_cmd_sig_heartbeat_sub_status,STATUS_NONE},
-	{MODE_APP_BIND, 0, SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER, mesh_cmd_sig_cfg_bind, MODE_APP_STATUS},
+//	{MODE_APP_BIND, 0, SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER, mesh_cmd_sig_cfg_bind, MODE_APP_STATUS},
+	{MODE_APP_BIND, 0, SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER, RD_Messenger_BindAll, MODE_APP_STATUS}, //RD_Edit Type Device model app bind
 	{MODE_APP_UNBIND, 0, SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER, mesh_cmd_sig_cfg_bind, MODE_APP_STATUS},
 	{MODE_APP_STATUS,1,SIG_MD_CFG_SERVER, SIG_MD_CFG_CLIENT,mesh_cmd_sig_cfg_bind_status,STATUS_NONE},
 	{NETKEY_ADD, 0, SIG_MD_CFG_CLIENT, SIG_MD_CFG_SERVER, mesh_cmd_sig_cfg_netkey_set, NETKEY_STATUS},

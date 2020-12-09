@@ -21,6 +21,7 @@
 #include "../Button/Button.h"
 #include "../RD_Remote/RD_Remote.h"
 #include "../RD_Flash/RD_Flash.h"
+#include "../RD_Type_Device/RD_Type_Device.h"
 #define RD_OPCODE_SEND		(0xA082)
 #define RD_OPCODE_RSP		(0xA182)
 #define RD_MAXRESPONESEND (2)
@@ -36,18 +37,24 @@ typedef struct{
 }RD_Config_DataRemote;
 extern RD_Config_DataRemote RD_Config_Data;
 extern unsigned char 		*RD_Messenger_TempSend;
-
-//#define mesh_cmd_sig_RD_respone_status      (0)
+extern unsigned char vr_RD_ProvDone;
+#define mesh_cmd_sig_RD_respone_status      (0)
 
 
 extern void RD_Config_Data_Remote(u8 _Button, u8 _Mode, u16 _SenceID);
-int mesh_cmd_sig_RD_respone_status (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
+//int mesh_cmd_sig_RD_respone_status (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 int RD_Messenger_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 int RD_Mess_ProcessCommingProcess (u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
 void RD_Messenger_CustomSendSTT(u8 *Mess, u32 _MessLength, u16 adr_dst);
 void RD_Messenger_SendNode2Gateway (u8 *Mess, u32 _MessLength);
 void RD_Send_Mess(void);
+void RD_Messenger_CustomSendSTTRsp(u8 *Mess, u32 _MessLength, u16 adr_dst);
+void RD_Messenger_SendNode2GatewayRsp (u8 *Mess, u32 _MessLength);
 
+void RD_Messenger_CustomSendSTTBindAll(u8 *Mess, u32 _MessLength, u16 adr_dst);
+void RD_Messenger_SendNode2GatewayBindAll (u8 *Mess, u32 _MessLength);
+int RD_Messenger_BindAll(u8 *par, int par_len, mesh_cb_fun_par_t *cb_par);
+void RD_Send_MessTypeDivice(void);
 //void RD_Messenger_SendBroadcast (u8 *Mess, u32 _MessLength);
 //void RD_Messenger_CustomSendCtrl(u8 *Mess, u32 _MessLength, u16 adr_dst);
 
